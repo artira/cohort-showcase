@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Nav from '@/components/Nav';
 import { useEffect, useState } from 'react';
-import { pmSupabase, COMMS_URL, PM_URL } from '@/lib/supabase';
+import { getPmSupabase, COMMS_URL, PM_URL } from '@/lib/supabase';
 
 export default function HomePage() {
   const [pmStats, setPmStats] = useState({ projects: 0, tasks: 0, done: 0, members: 0 });
@@ -11,10 +11,10 @@ export default function HomePage() {
   useEffect(() => {
     async function loadPmStats() {
       try {
-        const { count: projects } = await pmSupabase.from('projects').select('*', { count: 'exact', head: true });
-        const { count: tasks } = await pmSupabase.from('tasks').select('*', { count: 'exact', head: true });
-        const { count: done } = await pmSupabase.from('tasks').select('*', { count: 'exact', head: true }).eq('status', 'done');
-        const { count: members } = await pmSupabase.from('profiles').select('*', { count: 'exact', head: true });
+        const { count: projects } = await getPmSupabase().from('projects').select('*', { count: 'exact', head: true });
+        const { count: tasks } = await getPmSupabase().from('tasks').select('*', { count: 'exact', head: true });
+        const { count: done } = await getPmSupabase().from('tasks').select('*', { count: 'exact', head: true }).eq('status', 'done');
+        const { count: members } = await getPmSupabase().from('profiles').select('*', { count: 'exact', head: true });
         setPmStats({ projects: projects || 0, tasks: tasks || 0, done: done || 0, members: members || 0 });
       } catch (e) { console.log('PM stats unavailable'); }
     }

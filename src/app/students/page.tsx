@@ -3,7 +3,7 @@
 import Nav from '@/components/Nav';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { supabase, PM_URL, COMMS_URL } from '@/lib/supabase';
+import { getSupabase, PM_URL, COMMS_URL } from '@/lib/supabase';
 
 type Student = { id: string; name: string; github_handle: string | null; photo_url: string | null; bio: string | null; campus: string; skills: string[]; is_public: boolean; pm_repo: string | null; pm_deploy: string | null; comms_repo: string | null; comms_deploy: string | null; showcase_repo: string | null; showcase_deploy: string | null; linkedin_url: string | null; portfolio_url: string | null; };
 
@@ -15,7 +15,7 @@ export default function StudentsPage() {
   const [allSkills, setAllSkills] = useState<string[]>([]);
 
   useEffect(() => {
-    supabase.from('students').select('*').eq('is_public', true).order('name').then(({ data }) => {
+    getSupabase().from('students').select('*').eq('is_public', true).order('name').then(({ data }) => {
       if (data) {
         setStudents(data);
         const skills = new Set<string>();

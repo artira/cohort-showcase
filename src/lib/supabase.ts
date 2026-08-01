@@ -1,20 +1,27 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-const PLACEHOLDER = 'https://placeholder.supabase.co';
-const PLACEHOLDER_KEY = 
-'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2MDAwMDAwMDAsImV4cCI6MTkwMDAwMDAwMH0.placeholder';
+let _supabase: SupabaseClient | null = null;
+let _pmSupabase: SupabaseClient | null = null;
 
-// Showcase's own Supabase (profiles, partner requests)
-export const supabase: SupabaseClient = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || PLACEHOLDER,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || PLACEHOLDER_KEY
-);
+export function getSupabase(): SupabaseClient {
+  if (!_supabase) {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (!url || !key) throw new Error('Showcase Supabase not configured');
+    _supabase = createClient(url, key);
+  }
+  return _supabase;
+}
 
-// PM Platform Supabase (read-only project/task data)
-export const pmSupabase: SupabaseClient = createClient(
-  process.env.NEXT_PUBLIC_PM_SUPABASE_URL || PLACEHOLDER,
-  process.env.NEXT_PUBLIC_PM_SUPABASE_ANON_KEY || PLACEHOLDER_KEY
-);
+export function getPmSupabase(): SupabaseClient {
+  if (!_pmSupabase) {
+    const url = process.env.NEXT_PUBLIC_PM_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_PM_SUPABASE_ANON_KEY;
+    if (!url || !key) throw new Error('PM Supabase not configured');
+    _pmSupabase = createClient(url, key);
+  }
+  return _pmSupabase;
+}
 
 export const COMMS_URL = process.env.NEXT_PUBLIC_COMMS_URL || 'https://cohort-comms-rho.vercel.app';
 export const PM_URL = process.env.NEXT_PUBLIC_PM_URL || 'https://pm-artira-azure.vercel.app';

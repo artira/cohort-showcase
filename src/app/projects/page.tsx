@@ -2,7 +2,7 @@
 
 import Nav from '@/components/Nav';
 import { useEffect, useState } from 'react';
-import { pmSupabase, PM_URL, COMMS_URL } from '@/lib/supabase';
+import { getPmSupabase, PM_URL, COMMS_URL } from '@/lib/supabase';
 
 type Project = { id: string; name: string; description: string | null; target_date: string | null };
 
@@ -14,10 +14,10 @@ export default function ProjectsPage() {
   useEffect(() => {
     async function load() {
       try {
-        const { data: projs } = await pmSupabase.from('projects').select('*').eq('archived', false).order('created_at');
+        const { data: projs } = await getPmSupabase().from('projects').select('*').eq('archived', false).order('created_at');
         if (projs) {
           setProjects(projs);
-          const { data: tasks } = await pmSupabase.from('tasks').select('project_id, status');
+          const { data: tasks } = await getPmSupabase().from('tasks').select('project_id, status');
           const stats: Record<string, { total: number; done: number; in_progress: number }> = {};
           (tasks || []).forEach(t => {
             if (!stats[t.project_id]) stats[t.project_id] = { total: 0, done: 0, in_progress: 0 };

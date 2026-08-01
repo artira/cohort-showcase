@@ -2,7 +2,7 @@
 
 import Nav from '@/components/Nav';
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { getSupabase } from '@/lib/supabase';
 
 export default function PartnersPage() {
   const [formData, setFormData] = useState({ partner_name: '', company: '', email: '', message: '' });
@@ -13,20 +13,20 @@ export default function PartnersPage() {
   const [rsvpSubmitted, setRsvpSubmitted] = useState(false);
 
   useEffect(() => {
-    supabase.from('students').select('id, name').eq('is_public', true).order('name').then(({ data }) => { if (data) setStudents(data); });
+    getSupabase().from('students').select('id, name').eq('is_public', true).order('name').then(({ data }) => { if (data) setStudents(data); });
   }, []);
 
   async function handleIntroRequest(e: React.FormEvent) {
     e.preventDefault();
     if (!formData.partner_name || !formData.company || !formData.email || selectedStudents.length === 0) return;
-    await supabase.from('intro_requests').insert({ ...formData, student_ids: selectedStudents });
+    await getSupabase().from('intro_requests').insert({ ...formData, student_ids: selectedStudents });
     setSubmitted(true);
   }
 
   async function handleRsvp(e: React.FormEvent) {
     e.preventDefault();
     if (!rsvpData.name || !rsvpData.email) return;
-    await supabase.from('event_rsvps').insert(rsvpData);
+    await getSupabase().from('event_rsvps').insert(rsvpData);
     setRsvpSubmitted(true);
   }
 
