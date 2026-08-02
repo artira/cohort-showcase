@@ -1,5 +1,6 @@
 'use client';
 import Nav from '@/components/Nav';
+import CuteAvatar from '@/components/CuteAvatar';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getSupabase } from '@/lib/supabase';
@@ -20,7 +21,7 @@ export default function StudentsPage() {
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
       {filtered.map((s,i)=>{const c=COLORS[s.skills?.[0]]||'var(--accent)'; return(
         <div key={s.id} className="rounded-2xl border p-6 hover:shadow-lg transition-all hover:-translate-y-1 animate-fadeUp group" style={{background:'var(--bg-card)',borderColor:'var(--border)',animationDelay:`${i*0.05}s`}}>
-          <div className="flex items-center gap-3 mb-4"><div className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold text-white" style={{background:c}}>{s.name.split(' ').map(n=>n[0]).join('')}</div><div><h3 className="text-sm font-bold">{s.name}</h3><p className="text-xs" style={{color:'var(--text-muted)'}}>{s.campus}</p></div></div>
+          <div className="flex items-center gap-3 mb-4"><CuteAvatar name={s.name} size={48} className="flex-shrink-0 shadow-md" /><div><h3 className="text-sm font-bold">{s.name}</h3><p className="text-xs" style={{color:'var(--text-muted)'}}>{s.campus}</p></div></div>
           {s.bio && <p className="text-xs leading-relaxed mb-4 line-clamp-3" style={{color:'var(--text-secondary)'}}>{s.bio}</p>}
           <div className="flex flex-wrap gap-1 mb-4">{s.skills?.slice(0,5).map(sk=><span key={sk} className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{background:(COLORS[sk]||COLORS.default)+'15',color:COLORS[sk]||COLORS.default}}>{sk}</span>)}</div>
           <div className="flex flex-wrap gap-2 text-[10px]">
